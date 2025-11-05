@@ -35,8 +35,7 @@
         }
       ],
       "icon": "assets/icon.ico",
-      "requestedExecutionLevel": "requireAdministrator",
-      "manifest": "build/app.manifest"
+      "requestedExecutionLevel": "requireAdministrator"
     },
     "portable": {
       "artifactName": "${productName}-${version}-Portable.exe"

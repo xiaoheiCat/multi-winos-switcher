@@ -17,7 +17,12 @@ export class BootManager {
    */
   static async getBootEntries(): Promise<BootEntry[]> {
     try {
-      const { stdout } = await execPromise('bcdedit /enum', { encoding: 'utf8' });
+      // 使用 chcp 65001 切换到 UTF-8 编码，然后执行 bcdedit
+      const { stdout } = await execPromise('chcp 65001 >nul && bcdedit /enum', {
+        encoding: 'utf8',
+        shell: 'cmd.exe'
+      });
+
       return this.parseBcdEdit(stdout);
     } catch (error) {
       throw new Error(`无法读取启动配置: ${error}`);
@@ -29,12 +34,12 @@ export class BootManager {
    */
   private static parseBcdEdit(output: string): BootEntry[] {
     const entries: BootEntry[] = [];
-    const sections = output.split(/\r?\n\r?\n/);
 
-    let currentIdentifier = '';
+    // 按空行分割成多个段落
+    const sections = output.split(/\r?\n\s*\r?\n/);
 
     for (const section of sections) {
-      const lines = section.split(/\r?\n/).map(line => line.trim()).filter(line => line);
+      const lines = section.split(/\r?\n/).filter(line => line.trim());
 
       if (lines.length === 0) continue;
 
@@ -55,37 +60,48 @@ export class BootManager {
       };
 
       for (const line of lines) {
-        // 提取标识符 (identifier)
-        if (line.startsWith('标识符') || line.startsWith('identifier')) {
-          const match = line.match(/\{([0-9a-f-]+)\}/i);
+        const trimmedLine = line.trim();
+
+        // 提取标识符 (identifier) - 匹配格式: "标识符  {xxx}" 或 "identifier  {xxx}"
+        if (trimmedLine.startsWith('标识符') || trimmedLine.startsWith('identifier')) {
+          // 匹配所有 UUID 格式，包括 {default}, {current} 等特殊标识符
+          const match = trimmedLine.match(/\{([0-9a-f-]+)\}/i);
           if (match) {
             entry.identifier = match[0];
-            currentIdentifier = match[0];
 
             // 检查是否为 {current}
-            if (line.includes('{current}')) {
+            if (trimmedLine.includes('{current}')) {
               entry.isCurrent = true;
             }
           }
         }
 
-        // 提取设备 (device)
-        if (line.startsWith('device') || line.startsWith('设备')) {
-          entry.device = line.split(/\s+/).slice(1).join(' ');
+        // 提取设备 (device) - 匹配格式: "device  partition=C:"
+        if (trimmedLine.startsWith('device') || trimmedLine.startsWith('设备')) {
+          const parts = trimmedLine.split(/\s+/);
+          if (parts.length > 1) {
+            entry.device = parts.slice(1).join(' ');
+          }
         }
 
-        // 提取描述 (description)
-        if (line.startsWith('description') || line.startsWith('描述')) {
-          entry.description = line.split(/\s+/).slice(1).join(' ');
+        // 提取描述 (description) - 匹配格式: "description  Windows"
+        if (trimmedLine.startsWith('description') || trimmedLine.startsWith('描述')) {
+          const parts = trimmedLine.split(/\s+/);
+          if (parts.length > 1) {
+            entry.description = parts.slice(1).join(' ');
+          }
         }
 
         // 提取区域设置 (locale)
-        if (line.startsWith('locale') || line.startsWith('区域设置')) {
-          entry.locale = line.split(/\s+/).slice(1).join(' ');
+        if (trimmedLine.startsWith('locale') || trimmedLine.startsWith('区域设置')) {
+          const parts = trimmedLine.split(/\s+/);
+          if (parts.length > 1) {
+            entry.locale = parts.slice(1).join(' ');
+          }
         }
       }
 
-      // 只添加有效的启动项
+      // 只添加有效的启动项（必须有标识符和描述）
       if (entry.identifier && entry.description) {
         entries.push(entry as BootEntry);
       }
@@ -99,7 +115,10 @@ export class BootManager {
    */
   static async getCurrentDefault(): Promise<string> {
     try {
-      const { stdout } = await execPromise('bcdedit', { encoding: 'utf8' });
+      const { stdout } = await execPromise('chcp 65001 >nul && bcdedit', {
+        encoding: 'utf8',
+        shell: 'cmd.exe'
+      });
 
       // 查找 default 行
       const lines = stdout.split(/\r?\n/);

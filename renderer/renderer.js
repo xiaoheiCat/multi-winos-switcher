@@ -13,7 +13,6 @@ const windowsIconSVG = `
 // 页面加载完成
 window.addEventListener('DOMContentLoaded', async () => {
   await loadBootEntries();
-  setupKeyboardNavigation();
 });
 
 // 加载启动项列表
@@ -45,6 +44,12 @@ async function loadBootEntries() {
     errorEl.style.display = 'block';
     errorEl.querySelector('.error-message').textContent =
       `错误: ${error.message || '无法读取启动配置'}`;
+
+    // 隐藏底部提示和取消按钮
+    const footerEl = document.getElementById('footer');
+    if (footerEl) {
+      footerEl.style.display = 'none';
+    }
   }
 }
 
@@ -65,7 +70,6 @@ function renderBootEntries(currentDefault) {
       <div class="os-icon">${windowsIconSVG}</div>
       <div class="os-info">
         <div class="os-name">${entry.description}</div>
-        <div class="os-details">${entry.device || entry.locale || ''}</div>
       </div>
       ${isCurrent ? '<span class="os-badge">当前系统</span>' : ''}
     `;
@@ -96,36 +100,6 @@ function updateSelection() {
   });
 }
 
-// 键盘导航
-function setupKeyboardNavigation() {
-  document.addEventListener('keydown', (e) => {
-    if (bootEntries.length === 0) return;
-
-    switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault();
-        selectedIndex = Math.max(0, selectedIndex - 1);
-        updateSelection();
-        break;
-
-      case 'ArrowDown':
-        e.preventDefault();
-        selectedIndex = Math.min(bootEntries.length - 1, selectedIndex + 1);
-        updateSelection();
-        break;
-
-      case 'Enter':
-        e.preventDefault();
-        confirmSwitch(selectedIndex);
-        break;
-
-      case 'Escape':
-        e.preventDefault();
-        closeApp();
-        break;
-    }
-  });
-}
 
 // 确认切换
 function confirmSwitch(index) {

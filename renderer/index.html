@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>选择操作系统</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">选择操作系统</h1>
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>正在读取启动配置...</p>
+    </div>
+
+    <div id="error" class="error" style="display: none;">
+      <p class="error-message"></p>
+      <button class="btn-close" onclick="closeApp()">关闭</button>
+    </div>
+
+    <div id="os-list" class="os-list" style="display: none;"></div>
+
+    <div class="footer">
+      <p class="hint">使用 ↑ ↓ 方向键选择，按 Enter 确认</p>
+      <button class="btn-cancel" onclick="closeApp()">取消 (Esc)</button>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

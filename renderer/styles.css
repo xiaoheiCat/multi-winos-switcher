@@ -1,0 +1,237 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0078d7 0%, #005a9e 100%);
+  color: #ffffff;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 300;
+  margin-bottom: 80px;
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 错误提示 */
+.error {
+  text-align: left;
+}
+
+.error-message {
+  font-size: 18px;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+/* 系统列表 */
+.os-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.os-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid transparent;
+  border-radius: 4px;
+  padding: 20px 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.os-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.os-item.selected {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #ffffff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.os-item.current {
+  border-left: 5px solid #00ff00;
+}
+
+.os-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.os-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #ffffff;
+}
+
+.os-info {
+  flex: 1;
+}
+
+.os-name {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.os-details {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.os-badge {
+  background: rgba(0, 255, 0, 0.3);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 底部提示 */
+.footer {
+  width: 100%;
+  text-align: left;
+  margin-top: auto;
+  padding-top: 40px;
+}
+
+.hint {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+.btn-cancel,
+.btn-close {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  padding: 10px 30px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel:hover,
+.btn-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* 确认对话框 */
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-dialog {
+  background: #0078d7;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 40px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.confirm-dialog h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.confirm-dialog p {
+  font-size: 16px;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-confirm,
+.btn-cancel-dialog {
+  padding: 12px 35px;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-confirm {
+  background: #ffffff;
+  color: #0078d7;
+  font-weight: 600;
+}
+
+.btn-confirm:hover {
+  background: #f0f0f0;
+}
+
+.btn-cancel-dialog {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.btn-cancel-dialog:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

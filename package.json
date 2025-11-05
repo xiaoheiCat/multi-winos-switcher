@@ -1,0 +1,53 @@
+{
+  "name": "multi-winos-switcher",
+  "version": "1.0.0",
+  "description": "快速切换 Windows 双系统/多系统的 Electron 应用",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "tsc",
+    "dev": "tsc && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "windows",
+    "dual-boot",
+    "multi-boot",
+    "system-switcher"
+  ],
+  "author": "xiaoheicat",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "typescript": "^5.3.3"
+  },
+  "build": {
+    "appId": "com.xiaoheicat.multi-winos-switcher",
+    "productName": "Multi-WinOS Switcher",
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "requestedExecutionLevel": "requireAdministrator",
+      "manifest": "build/app.manifest"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.exe"
+    },
+    "files": [
+      "dist/**/*",
+      "renderer/**/*",
+      "assets/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    }
+  }
+}

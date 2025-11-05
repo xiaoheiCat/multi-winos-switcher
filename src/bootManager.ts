@@ -107,7 +107,16 @@ export class BootManager {
       }
     }
 
-    return entries;
+    // 检查是否有 {current} 标识的启动项
+    const currentEntry = entries.find(entry => entry.isCurrent);
+
+    if (currentEntry) {
+      // 有 {current}：保留 {default} 和其他启动项，过滤掉 {current}
+      return entries.filter(entry => !entry.isCurrent || entry.identifier === '{default}');
+    } else {
+      // 没有 {current}：过滤掉 {default}，其他启动项都保留
+      return entries.filter(entry => entry.identifier !== '{default}');
+    }
   }
 
   /**
@@ -148,10 +157,8 @@ export class BootManager {
       // 取消等待时间
       await execPromise('bcdedit /timeout 0');
 
-      // 延迟 1 秒后重启
-      setTimeout(async () => {
-        await execPromise('shutdown /r /t 0');
-      }, 1000);
+      // 重启
+      await execPromise('shutdown /r /t 0');
 
     } catch (error) {
       throw new Error(`切换系统失败: ${error}`);

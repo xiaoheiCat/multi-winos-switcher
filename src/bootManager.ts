@@ -3,6 +3,9 @@ import { promisify } from 'util';
 
 const execPromise = promisify(exec);
 
+// 正则表达式用于匹配启动项标识符（UUID 或特殊标识符如 {default}, {current}）
+const BOOT_IDENTIFIER_REGEX = /\{([0-9a-f-]+|default|current)\}/i;
+
 export interface BootEntry {
   identifier: string;
   device: string;
@@ -65,12 +68,12 @@ export class BootManager {
         // 提取标识符 (identifier) - 匹配格式: "标识符  {xxx}" 或 "identifier  {xxx}"
         if (trimmedLine.startsWith('标识符') || trimmedLine.startsWith('identifier')) {
           // 匹配所有格式，包括 UUID 和特殊标识符如 {default}, {current}
-          const match = trimmedLine.match(/\{([0-9a-f-]+|default|current)\}/i);
+          const match = trimmedLine.match(BOOT_IDENTIFIER_REGEX);
           if (match) {
             entry.identifier = match[0];
 
             // 检查是否为 {current}
-            if (match[0] === '{current}') {
+            if (match[0].toLowerCase() === '{current}') {
               entry.isCurrent = true;
             }
           }
@@ -133,7 +136,7 @@ export class BootManager {
       const lines = stdout.split(/\r?\n/);
       for (const line of lines) {
         if (line.includes('default') || line.includes('默认')) {
-          const match = line.match(/\{([0-9a-f-]+|default|current)\}/i);
+          const match = line.match(BOOT_IDENTIFIER_REGEX);
           if (match) {
             return match[0];
           }

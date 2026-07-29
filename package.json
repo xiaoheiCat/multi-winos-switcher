@@ -7,8 +7,8 @@
     "start": "electron .",
     "build": "tsc",
     "dev": "tsc && electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
   },
   "keywords": [
     "windows",
@@ -34,11 +34,11 @@
           "arch": ["x64"]
         }
       ],
-      "icon": "assets/icon.ico",
-      "requestedExecutionLevel": "requireAdministrator"
+      "icon": "assets/icon.ico"
     },
     "portable": {
-      "artifactName": "${productName}-${version}-Portable.exe"
+      "artifactName": "${productName}-${version}-Portable.exe",
+      "requestExecutionLevel": "admin"
     },
     "files": [
       "dist/**/*",

@@ -136,7 +136,7 @@ body {
 /* 底部提示 */
 .footer {
   width: 100%;
-  text-align: left;
+  text-align: right;
   margin-top: auto;
   padding-top: 40px;
 }

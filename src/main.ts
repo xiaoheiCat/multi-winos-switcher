@@ -2,6 +2,12 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as path from 'path';
 import { BootManager, BootEntry } from './bootManager';
 
+// Elevated portable builds run from a temporary directory. On some Windows
+// systems Chromium's GPU sandbox crashes in that combination with
+// STATUS_BREAKPOINT. Disable only the GPU-process sandbox; keep the remaining
+// Chromium sandboxes enabled.
+app.commandLine.appendSwitch('disable-gpu-sandbox');
+
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
